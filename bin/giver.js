@@ -7,14 +7,15 @@ const giver     = require('../lib/giver'),
 
 commander
 	.option('-c, --config <config>', 'Config File', String, '/etc/giver.json')
+	.option('-r, --redis <redisUrl>', 'Dynamic redis pub/sub config', String)
 	.option('-d, --daemon', 'Shut off console logging')
 	.parse(process.argv);
 
-const config = require(commander.config); 
+const config = require(commander.config);
 const giver_logger = new logger({
 	filename: 'giver-%DATE%.log',
 	console: commander.daemon === true ? false : true,
-	dirname: config.log_dirname || '',
+	dirname: config.log_dirname || '/var/log',
 	datePattern: config.log_date_pattern || 'YYYY-MM-DD',
 	zippedArchive: config.log_zipped || true,
 	maxSize: config.log_max_size || '20m',
@@ -22,7 +23,6 @@ const giver_logger = new logger({
 
 });
 giver_logger.extend(console);
-config.logger = giver_logger;
 
 if (cluster.isMaster) {
 	cluster.fork();
@@ -32,7 +32,7 @@ if (cluster.isMaster) {
 	});
 }
 else {
-	var giver_instance = new giver(config);
+	var giver_instance = new giver(logger, config, commander.redis);
 	console.log("TheGiver is recieving on " + config.port);
 }
 

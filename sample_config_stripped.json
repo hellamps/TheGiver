@@ -1,0 +1,16 @@
+{
+  "port": 61337,
+  "log_dirname": "/tmp",
+  "log_date_pattern": "YYYY-MM-DD",
+  "log_zipped": true,
+  "log_max_size": "20m",
+  "log_max_files": "7d",
+  "mappings": {
+    "/health-check": [
+		"http://localhost:8080",
+		"https://localhost:443"
+    ]
+  },
+  "ssl_config": {
+  }
+}
