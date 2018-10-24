@@ -32,7 +32,7 @@ if (cluster.isMaster) {
 	});
 }
 else {
-	var giver_instance = new giver(logger, config, commander.redis);
+	var giver_instance = new giver(giver_logger, config, commander.redis);
 	console.log("TheGiver is recieving on " + config.port);
 }
 
